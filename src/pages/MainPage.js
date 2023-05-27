@@ -37,7 +37,8 @@ export default function MainPage() {
       );
       if (selectedCity) {
         setCityId(selectedCity.id);
-
+        localStorage.setItem('cityId', selectedCity.id);
+        navigate(`/tickets/${selectedCity.id}`)
       }
     };
   

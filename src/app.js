@@ -2,6 +2,7 @@ import { useEffect, useState, useContext, createContext } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage.js";
 import { UserContextProvider } from "./contexts/userContext.js";
+import TicketsPage from "./pages/TicketsPage.js";
 
 
 
@@ -14,6 +15,7 @@ function App() {
       <UserContextProvider>
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/tickets/:id" element={<TicketsPage />} />
         </Routes>
       </UserContextProvider>
     </BrowserRouter>
