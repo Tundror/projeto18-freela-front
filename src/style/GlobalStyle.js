@@ -31,7 +31,10 @@ const GlobalStyle = createGlobalStyle`
 		&::placeholder{
 			font-style: italic;
 		}
-		
+	}
+	a {
+		text-decoration: none;
+  		color: inherit;
 	}
 `
 

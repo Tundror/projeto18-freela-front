@@ -1,52 +1,50 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext.js";
-import { Link, useParams } from "react-router-dom";
-import { styled } from "styled-components";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import dayjs from "dayjs";
+import { styled } from "styled-components";
 
-export default function TicketsPage() {
+export default function HotelsPage() {
     const { cityId, setCityId } = useContext(UserContext);
-    const [tickets, setTickets] = useState([]);
-    const {id} = useParams();
+    const [hotels, setHotels] = useState([]);
+    const { id } = useParams();
     useEffect(() => {
-        
+
         localStorage.setItem('cityId', id);
         const storedCityId = localStorage.getItem('cityId');
         setCityId(storedCityId)
-        const url = `http://localhost:5000/tickets/${storedCityId}`;
-        async function fetchTickets() {
+        const url = `http://localhost:5000/hotels/${storedCityId}`;
+        async function fetchHotels() {
             try {
                 const response = await axios.get(url);
                 console.log(response.data)
-                setTickets(response.data);
+                setHotels(response.data);
             } catch (error) {
                 console.error("Error fetching tickets:", error);
             }
         }
 
-        fetchTickets();
+        fetchHotels();
     }, []);
-
     return (
         <MainContainer>
-        <Header>Viagens Alucinantes</Header>
-        <Title>Selecione uma passagem</Title>
-        <TicketsContainer>
-          {tickets.map((ticket) => (
-            <Link to={`/hotels/${cityId}`} key={ticket.id}>
-              <TicketCard>
-                <p>Saida: {ticket.departure_city}</p>
-                <p>Destino: {ticket.destination_city}</p>
-                <p>Data: {dayjs(ticket.time).format("DD/MM/YYYY")}</p>
-                <p>Horario: {dayjs(ticket.time).format("HH:mm")}</p>
-                <p>Preco: R$ {ticket.price}</p>
-                <p>Empresa: {ticket.company}</p>
-              </TicketCard>
-            </Link>
-          ))}
-        </TicketsContainer>
-      </MainContainer>
+            <Header>Viagens Alucinantes</Header>
+            <Title>Aqui estão os hotéis na cidade de {hotels[0]?.city}</Title>
+            <HotelsContainer>
+                {hotels.map((hotel) => (
+                    <HotelCard key={hotel.id}>
+                        <Image src={hotel.image} alt={hotel.name} />
+                        <p>Nome: {hotel.name}</p>
+                        <p>Descricao: {hotel.description}</p>
+                        <p>Preço por dia: R$ {hotel.day_price}</p>
+                        <p>Toalha: {hotel.towel ? "Sim" : "Não"}</p>
+                        <p>Piscina: {hotel.pool ? "Sim" : "Não"}</p>
+                        <p>Café da manhã: {hotel.breakfast ? "Sim" : "Não"}</p>
+                        <p>Ar condicionado: {hotel.air ? "Sim" : "Não"}</p>
+                    </HotelCard>
+                ))}
+            </HotelsContainer>
+        </MainContainer>
     );
 }
 
@@ -61,16 +59,26 @@ const MainContainer = styled.div`
   background-position: center;
 `;
 
-const TicketCard = styled.div`
+const Image = styled.img`
+    width:200px;
+    height: 200px;
+    margin-bottom: 5px;
+`
+
+const HotelCard = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 5px;
-  width: 200px;
-  height:100px;
+  min-width: 200px;
+  max-width: 500px;
+  min-height:100px;
   margin: 10px;
+  p{
+    margin-bottom: 5px;
+  }
 `;
 
-const TicketsContainer = styled.div`
+const HotelsContainer = styled.div`
     display: flex;
     width: 80%;
     flex-wrap: wrap;
