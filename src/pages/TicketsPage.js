@@ -18,7 +18,8 @@ export default function TicketsPage() {
         localStorage.setItem('cityId', id);
         const storedCityId = localStorage.getItem('cityId');
         setCityId(storedCityId)
-        const url = `http://localhost:5000/tickets/${storedCityId}?minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}`;
+        const initialUrl = process.env.REACT_APP_API_URL
+        const url = `${initialUrl}/tickets/${storedCityId}?minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}`;
 
         async function fetchTickets() {
             try {

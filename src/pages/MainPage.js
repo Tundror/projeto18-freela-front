@@ -11,7 +11,8 @@ export default function MainPage() {
     const [citiesList, setCitiesList] = useState([]);
     const [formattedCities, setFormattedCities] = useState([]);
     const { setCityId } = useContext(UserContext);
-    const url = 'http://localhost:5000/cities';
+    const initialUrl = process.env.REACT_APP_API_URL
+    const url = `${initialUrl}/cities`;
   
     useEffect(() => {
       const promise = axios.get(url);

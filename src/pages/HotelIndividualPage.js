@@ -10,11 +10,13 @@ export default function HotelIndividualPage() {
     const { id } = useParams();
     const [priceRange, setPriceRange] = useState([0, 300]);
     useEffect(() => {
-
+        
         localStorage.setItem('hotelId', id);
         const storedHotelId = localStorage.getItem('hotelId');
         setHotelId(storedHotelId)
-        const url = `http://localhost:5000/hotels/selected/${storedHotelId}`;
+        const initialUrl = process.env.REACT_APP_API_URL
+        const url = `${initialUrl}/hotels/selected/${storedHotelId}`;
+        console.log(process.env.REACT_APP_API_URL)
         async function fetchHotels() {
             try {
                 const response = await axios.get(url);
@@ -27,29 +29,35 @@ export default function HotelIndividualPage() {
 
         fetchHotels();
     }, []);
-    return (
+      return (
         <MainContainer>
-            <Header>Viagens Alucinantes</Header>
-
-            <Title>{hotels[0].name}</Title>
-            <HotelsContainer>
+          <Header>Viagens Alucinantes</Header>
+      
+          {hotels.length > 0 ? (
+            <>
+              <Title>{hotels[0].name}</Title>
+              <HotelsContainer>
                 {hotels
-                .filter((hotel) => hotel.day_price >= priceRange[0] && hotel.day_price <= priceRange[1])
-                .map((hotel) => (
+                  .filter((hotel) => hotel.day_price >= priceRange[0] && hotel.day_price <= priceRange[1])
+                  .map((hotel) => (
                     <HotelCard key={hotel.id}>
-                        <Image src={hotel.image} alt={hotel.name} />
-                        <p>{hotel.description}</p>
-                        <p>Preço por dia: R$ {hotel.day_price}</p>
-                        <p>Comodidades:</p>
-                        <p>{hotel.towel ? "- Toalha" : ""}</p>
-                        <p>{hotel.pool ? "- Piscina" : ""}</p>
-                        <p>{hotel.breakfast ? "- Cafe da manha" : ""}</p>
-                        <p>{hotel.air ? "- Ar Condicionado" : ""}</p>
+                      <Image src={hotel.image} alt={hotel.name} />
+                      <p>{hotel.description}</p>
+                      <p>Preço por dia: R$ {hotel.day_price}</p>
+                      <p>Comodidades:</p>
+                      <p>{hotel.towel ? "- Toalha" : ""}</p>
+                      <p>{hotel.pool ? "- Piscina" : ""}</p>
+                      <p>{hotel.breakfast ? "- Cafe da manha" : ""}</p>
+                      <p>{hotel.air ? "- Ar Condicionado" : ""}</p>
                     </HotelCard>
-                ))}
-            </HotelsContainer>
+                  ))}
+              </HotelsContainer>
+            </>
+          ) : (
+            <p>Não há hotéis disponíveis.</p>
+          )}
         </MainContainer>
-    );
+      );
 }
 
 const MainContainer = styled.div`

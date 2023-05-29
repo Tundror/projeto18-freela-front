@@ -15,7 +15,8 @@ export default function HotelsPage() {
         localStorage.setItem('cityId', id);
         const storedCityId = localStorage.getItem('cityId');
         setCityId(storedCityId)
-        const url = `http://localhost:5000/hotels/${storedCityId}`;
+        const initialUrl = process.env.REACT_APP_API_URL
+        const url = `${initialUrl}/hotels/${storedCityId}`;
         async function fetchHotels() {
             try {
                 const response = await axios.get(url);

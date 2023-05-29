@@ -20,7 +20,8 @@ export default function TicketsIndividualPage() {
         localStorage.setItem('ticketId', id);
         const storedTicketId = localStorage.getItem('ticketId');
         setTicketId(storedTicketId)
-        const url = `http://localhost:5000/tickets/selected/${storedTicketId}`;
+        const initialUrl = process.env.REACT_APP_API_URL
+        const url = `${initialUrl}/tickets/selected/${storedTicketId}`;
 
         async function fetchTickets() {
             try {
