@@ -15,6 +15,7 @@ export default function MainPage() {
     const url = `${initialUrl}/cities`;
   
     useEffect(() => {
+      console.log(process.env.REACT_APP_API_URL)
       const promise = axios.get(url);
       promise
         .then((response) => {
