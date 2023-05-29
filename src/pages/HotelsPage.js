@@ -6,7 +6,7 @@ import { styled } from "styled-components";
 import Slider from "rc-slider";
 
 export default function HotelsPage() {
-    const { cityId, setCityId } = useContext(UserContext);
+    const { setCityId } = useContext(UserContext);
     const [hotels, setHotels] = useState([]);
     const { id } = useParams();
     const [priceRange, setPriceRange] = useState([0, 300]);
@@ -49,12 +49,7 @@ export default function HotelsPage() {
                             <HotelCard key={hotel.id}>
                                 <Image src={hotel.image} alt={hotel.name} />
                                 <p>Nome: {hotel.name}</p>
-                                <p>Descricao: {hotel.description}</p>
                                 <p>Preço por dia: R$ {hotel.day_price}</p>
-                                <p>Toalha: {hotel.towel ? "Sim" : "Não"}</p>
-                                <p>Piscina: {hotel.pool ? "Sim" : "Não"}</p>
-                                <p>Café da manhã: {hotel.breakfast ? "Sim" : "Não"}</p>
-                                <p>Ar condicionado: {hotel.air ? "Sim" : "Não"}</p>
                             </HotelCard>
                         </Link>
                     ))}

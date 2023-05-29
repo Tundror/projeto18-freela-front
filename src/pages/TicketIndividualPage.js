@@ -1,26 +1,26 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext.js";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import axios from "axios";
 import dayjs from "dayjs";
-import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useNavigate } from 'react-router-dom';
 
 
 export default function TicketsIndividualPage() {
-    const { cityId, setCityId } = useContext(UserContext);
+    const { cityId } = useContext(UserContext);
+    const { setTicketId } = useContext(UserContext);
     const [tickets, setTickets] = useState([]);
-    const [priceRange, setPriceRange] = useState([0, 200]);
+    const [priceRange] = useState([0, 200]);
     const { id } = useParams();
     const navigate = useNavigate()
     useEffect(() => {
 
-        localStorage.setItem('cityId', id);
-        const storedCityId = localStorage.getItem('cityId');
-        setCityId(storedCityId)
-        const url = `http://localhost:5000/tickets/selected/${storedCityId}`;
+        localStorage.setItem('ticketId', id);
+        const storedTicketId = localStorage.getItem('ticketId');
+        setTicketId(storedTicketId)
+        const url = `http://localhost:5000/tickets/selected/${storedTicketId}`;
 
         async function fetchTickets() {
             try {
@@ -61,14 +61,6 @@ export default function TicketsIndividualPage() {
         </MainContainer>
     );
 }
-
-const PriceSliderContainer = styled.div`
-  width: 500px;
-  margin-bottom: 20px;
-  .custom-slider {
-    width: 100%;
-  }
-`;
 
 const MainContainer = styled.div`
   display: flex;
