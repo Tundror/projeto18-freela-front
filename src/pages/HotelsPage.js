@@ -1,13 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext.js";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { styled } from "styled-components";
+import Slider from "rc-slider";
 
 export default function HotelsPage() {
     const { cityId, setCityId } = useContext(UserContext);
     const [hotels, setHotels] = useState([]);
     const { id } = useParams();
+    const [priceRange, setPriceRange] = useState([0, 300]);
     useEffect(() => {
 
         localStorage.setItem('cityId', id);
@@ -29,20 +31,33 @@ export default function HotelsPage() {
     return (
         <MainContainer>
             <Header>Viagens Alucinantes</Header>
+            <p>Preço: R$ {priceRange[0]} - R$ {priceRange[1]}</p>
+            <PriceSliderContainer><Slider
+                range
+                min={0}
+                max={300}
+                defaultValue={[0, 300]}
+                onChange={setPriceRange}
+            /></PriceSliderContainer>
+
             <Title>Aqui estão os hotéis na cidade de {hotels[0]?.city}</Title>
             <HotelsContainer>
-                {hotels.map((hotel) => (
-                    <HotelCard key={hotel.id}>
-                        <Image src={hotel.image} alt={hotel.name} />
-                        <p>Nome: {hotel.name}</p>
-                        <p>Descricao: {hotel.description}</p>
-                        <p>Preço por dia: R$ {hotel.day_price}</p>
-                        <p>Toalha: {hotel.towel ? "Sim" : "Não"}</p>
-                        <p>Piscina: {hotel.pool ? "Sim" : "Não"}</p>
-                        <p>Café da manhã: {hotel.breakfast ? "Sim" : "Não"}</p>
-                        <p>Ar condicionado: {hotel.air ? "Sim" : "Não"}</p>
-                    </HotelCard>
-                ))}
+                {hotels
+                    .filter((hotel) => hotel.day_price >= priceRange[0] && hotel.day_price <= priceRange[1])
+                    .map((hotel) => (
+                        <Link to={`/hotels/selected/${hotel.id}`} key={hotel.id}>
+                            <HotelCard key={hotel.id}>
+                                <Image src={hotel.image} alt={hotel.name} />
+                                <p>Nome: {hotel.name}</p>
+                                <p>Descricao: {hotel.description}</p>
+                                <p>Preço por dia: R$ {hotel.day_price}</p>
+                                <p>Toalha: {hotel.towel ? "Sim" : "Não"}</p>
+                                <p>Piscina: {hotel.pool ? "Sim" : "Não"}</p>
+                                <p>Café da manhã: {hotel.breakfast ? "Sim" : "Não"}</p>
+                                <p>Ar condicionado: {hotel.air ? "Sim" : "Não"}</p>
+                            </HotelCard>
+                        </Link>
+                    ))}
             </HotelsContainer>
         </MainContainer>
     );
@@ -57,6 +72,14 @@ const MainContainer = styled.div`
   background-image: url("https://img.freepik.com/premium-photo/backpack-asian-man-mountain-see-view-panorama-beautiful-nature-landscape-sea-adventure-vacation-travel-leisure-asia-mu-ko-ang-thong-island-national-park-background-thailand_536080-1002.jpg?w=2000");
   background-size: cover;
   background-position: center;
+`;
+
+const PriceSliderContainer = styled.div`
+  width: 500px;
+  margin-bottom: 20px;
+  .custom-slider {
+    width: 100%;
+  }
 `;
 
 const Image = styled.img`

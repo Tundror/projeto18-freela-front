@@ -6,19 +6,21 @@ import axios from "axios";
 import dayjs from "dayjs";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import { useNavigate } from 'react-router-dom';
 
 
-export default function TicketsPage() {
+export default function TicketsIndividualPage() {
     const { cityId, setCityId } = useContext(UserContext);
     const [tickets, setTickets] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 200]);
     const { id } = useParams();
+    const navigate = useNavigate()
     useEffect(() => {
 
         localStorage.setItem('cityId', id);
         const storedCityId = localStorage.getItem('cityId');
         setCityId(storedCityId)
-        const url = `http://localhost:5000/tickets/${storedCityId}?minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}`;
+        const url = `http://localhost:5000/tickets/selected/${storedCityId}`;
 
         async function fetchTickets() {
             try {
@@ -32,34 +34,30 @@ export default function TicketsPage() {
 
         fetchTickets();
     }, []);
+        function confirmTicket(){
+            navigate(`/hotels/${cityId}`)
+        }
 
     return (
         <MainContainer>
             <Header>Viagens Alucinantes</Header>
-            <p>Preço: R$ {priceRange[0]} - R$ {priceRange[1]}</p>
-            <PriceSliderContainer><Slider
-                range
-                min={0}
-                max={200}
-                defaultValue={[0, 200]}
-                onChange={setPriceRange}
-            /></PriceSliderContainer>
 
-            <Title>Selecione uma passagem</Title>
+            <Title>Confirme a passagem escolhida</Title>
             <TicketsContainer>
                 {tickets
                     .filter((ticket) => ticket.price >= priceRange[0] && ticket.price <= priceRange[1])
                     .map((ticket) => (
-                        <Link to={`/tickets/selected/${ticket.id}`} key={ticket.id}>
                             <TicketCard>
-                                <p>Local de partida: {ticket.departure_city}</p>
+                                <p>Saida: {ticket.departure_city}</p>
+                                <p>Destino: {ticket.destination_city}</p>
                                 <p>Data: {dayjs(ticket.time).format("DD/MM/YYYY")}</p>
                                 <p>Horario: {dayjs(ticket.time).format("HH:mm")}</p>
                                 <p>Preco: R$ {ticket.price}</p>
+                                <p>Empresa: {ticket.company}</p>
                             </TicketCard>
-                        </Link>
                     ))}
             </TicketsContainer>
+            <SearchButton onClick={confirmTicket}>Confirmar passagem</SearchButton>
         </MainContainer>
     );
 }
@@ -87,10 +85,11 @@ const TicketCard = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 5px;
-  width: 200px;
-  height:100px;
+  width: 500px;
+  height:300px;
   margin: 10px;
   p{
+    font-size: 40px;
     margin-bottom: 10px;
   }
 `;
@@ -124,4 +123,19 @@ const Title = styled.h1`
   font-size: 24px;
   color: #333;
   font-weight: bold;
+`;
+
+const SearchButton = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
